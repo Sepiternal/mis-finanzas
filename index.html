@@ -190,17 +190,7 @@ input:focus,select:focus{border-color:var(--text);}
 
 <div class="content">
 
-  <!-- BANNER DE CONFIGURACIÓN (visible hasta que se configure) -->
-  <div id="config-banner" class="config-banner" style="display:none">
-    <h3>⚙️ Configurar base de datos</h3>
-    <p>Pegá tus credenciales de Supabase. Las encontrás en:<br>
-    <strong>Project Settings → API</strong></p>
-    <label class="flabel" style="color:var(--amber)">Project URL</label>
-    <input type="text" id="cfg-url" placeholder="https://xxxxxxxxxxxx.supabase.co">
-    <label class="flabel" style="color:var(--amber);margin-top:6px">Anon Key</label>
-    <input type="text" id="cfg-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
-    <button onclick="guardarConfig()" style="margin-top:10px">Guardar y conectar</button>
-  </div>
+  <!-- credenciales hardcodeadas, banner eliminado -->
 
   <!-- RESUMEN -->
   <div id="tab-resumen">
@@ -379,8 +369,10 @@ input:focus,select:focus{border-color:var(--text);}
 //  Reemplazá estos dos valores con los tuyos de Supabase
 //  Project Settings → API
 // ═══════════════════════════════════════════════════════════
-let SUPA_URL = localStorage.getItem('supa_url') || '';
-let SUPA_KEY = localStorage.getItem('supa_key') || '';
+// ── Reemplazá estos dos valores con los tuyos ──────────────
+const SUPA_URL = 'https://kxnforkdhhjmeovtujwc.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4bmZvcmtkaGhqbWVvdnR1andjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3Njg0OTcsImV4cCI6MjA5MzM0NDQ5N30.YMrGz1ZVJVPDVHiwfVi_xdskVH1UDuRbDKouEV0CfRs';
+// ───────────────────────────────────────────────────────────
 
 // ─── STATE ────────────────────────────────────────────────
 let movs   = [];
@@ -399,24 +391,8 @@ const BCOLORS = ['#2A7A50','#1A5CA8','#C0392B','#86580A','#5A3FA0','#1A7A7A','#A
   document.getElementById('hoy').textContent =
     n.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'});
 
-  if(!SUPA_URL || !SUPA_KEY){
-    document.getElementById('config-banner').style.display = 'block';
-    setConnDot('err');
-  } else {
-    init();
-  }
-})();
-
-function guardarConfig(){
-  const url = document.getElementById('cfg-url').value.trim().replace(/\/$/, '');
-  const key = document.getElementById('cfg-key').value.trim();
-  if(!url || !key){ alert('Completá los dos campos.'); return; }
-  localStorage.setItem('supa_url', url);
-  localStorage.setItem('supa_key', key);
-  SUPA_URL = url; SUPA_KEY = key;
-  document.getElementById('config-banner').style.display = 'none';
   init();
-}
+})();
 
 async function init(){
   setConnDot('loading');
@@ -428,8 +404,7 @@ async function init(){
   } catch(e){
     setConnDot('err');
     console.error(e);
-    alert('Error al conectar con Supabase. Verificá tus credenciales.');
-    document.getElementById('config-banner').style.display = 'block';
+    alert('Error al conectar con Supabase. Verificá la anon key en el HTML.');
   }
 }
 
